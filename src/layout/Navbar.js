@@ -2,14 +2,29 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Tooltip } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import StoreIcon from "@mui/icons-material/Store";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
-import StroreIcon from "@mui/icons-material/Storefront";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
+import Money from "@mui/icons-material/AttachMoney";
+import DownloadIcon from "@mui/icons-material/Download";
+import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 
 import logo from '../images/logo.png';
+
+import { jwtDecode } from 'jwt-decode';
+
+export const getToken = () => {
+    return localStorage.getItem('token');
+};
+
+export const getUserRoleFromToken = () => {
+    const token = getToken();
+    if (!token) return null;
+
+    const decoded = jwtDecode(token);
+    return decoded?.role;
+};
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -20,6 +35,7 @@ const Navbar = () => {
     };
 
     const isLoggedIn = !!localStorage.getItem("token");
+    const currentUserRole = getUserRoleFromToken();
 
     return (
         <AppBar position="static" sx={{ bgcolor: "#1a1a1a", boxShadow: "0 4px 10px rgba(0,0,0,0.5)" }}>
@@ -53,13 +69,31 @@ const Navbar = () => {
                         </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="Покупки" arrow>
-                        <IconButton component={Link} to="/api/purchases" sx={{ color: "#fff" }}>
-                            <HomeIcon />
-                        </IconButton>
-                    </Tooltip>
+                    {isLoggedIn && currentUserRole === 'ADMIN' && (
+                        <Tooltip title="Сотрудники" arrow>
+                            <IconButton component={Link} to="/employees" sx={{ color: "#fff" }}>
+                                <AdminIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+
+                    {isLoggedIn && currentUserRole === 'ADMIN' && (
+                        <Tooltip title="Отчеты" arrow>
+                            <IconButton component={Link} to="/reports" sx={{ color: "#fff" }}>
+                                <DownloadIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
 
                     {isLoggedIn && (
+                        <Tooltip title="Продажи" arrow>
+                            <IconButton component={Link} to="/api/purchases" sx={{ color: "#fff" }}>
+                                <Money />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+
+                    {isLoggedIn && currentUserRole === 'ADMIN' && (
                         <Tooltip title="Товары" arrow>
                             <IconButton component={Link} to="/products" sx={{ color: "#fff" }}>
                                 <StoreIcon />
@@ -75,13 +109,7 @@ const Navbar = () => {
                         </Tooltip>
                     )}
 
-                    {isLoggedIn && (
-                        <Tooltip title="Добавить товар" arrow>
-                            <IconButton component={Link} to="/addproduct" sx={{ color: "#fff" }}>
-                                <AddBoxIcon />
-                            </IconButton>
-                        </Tooltip>
-                    )}
+
                 </Box>
 
                 {isLoggedIn ? (
@@ -127,4 +155,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

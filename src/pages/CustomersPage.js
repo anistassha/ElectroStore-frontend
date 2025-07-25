@@ -292,7 +292,15 @@ const CustomersPage = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog}>Отмена</Button>
-                    <Button onClick={handleSave} variant="contained">
+                    {/* <Button onClick={handleSave} variant="contained">
+                        Сохранить
+                    </Button> */}
+
+                    <Button
+                        onClick={handleSave}
+                        variant="contained"
+                        disabled={!currentCustomer.firstName || !currentCustomer.lastName || !currentCustomer.phoneNumber}
+                    >
                         Сохранить
                     </Button>
                 </DialogActions>

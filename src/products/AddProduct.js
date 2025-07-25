@@ -527,7 +527,7 @@ export default function AddProduct() {
 
                         <Button
                             component={Link}
-                            to="/"
+                            to="/products"
                             variant="outlined"
                             sx={{
                                 py: 0.9,
@@ -545,7 +545,7 @@ export default function AddProduct() {
                             }}
                             startIcon={<ArrowBackIcon sx={{ fontSize: 18 }} />}
                         >
-                            Вернуться на главную
+                            Назад
                         </Button>
                     </Box>
                 </Paper>
